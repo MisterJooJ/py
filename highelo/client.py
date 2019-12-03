@@ -28,7 +28,7 @@ def mod():
 
 
 def update(jogada, jogador):
-    os.system('cls')
+    os.system('CLEAR')
     pos[jogada - 1] = jogador
     mod()
     tab()
@@ -44,13 +44,12 @@ def init(vez):
             update(jogada, ordem)
             sock.send(pickle.dumps(jogada))
             jogada = pickle.loads(sock.recv(4096))
-            update(jogada, ordem)
-
+            update(jogada, 'O')
         else:
             ordem = 'O'
             print('esperando o outro jogador')
             jogada = pickle.loads(sock.recv(4096))
-            update(jogada, ordem)
+            update(jogada, 'X')
             print('sua vez')
             mod()
             tab()
@@ -70,7 +69,7 @@ def gui():
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 host = socket.gethostname()
-port = 5555
+port = 6666
 
 sock.connect((host, port))
 data = pickle.loads(sock.recv(4096))
