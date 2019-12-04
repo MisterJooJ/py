@@ -2,7 +2,6 @@
 # import thorpy
 import socket
 import pickle
-import os
 
 # mixer.init()
 # mixer.music.load("C:\\Users\\LAN HOUSE\\Desktop\\agoravai\\fly me to the moon instrumental.mp3")
@@ -28,7 +27,6 @@ def mod():
 
 
 def update(jogada, jogador):
-    os.system('CLEAR')
     pos[jogada - 1] = jogador
     mod()
     tab()
@@ -36,6 +34,7 @@ def update(jogada, jogador):
 
 def init(vez):
     while True:
+        verify = 0
         if vez == 1:
             ordem = 'X'
             print('você começa')
@@ -43,6 +42,10 @@ def init(vez):
             jogada = int(input())
             update(jogada, ordem)
             sock.send(pickle.dumps(jogada))
+            verify = pickle.loads(sock.recv(4096))
+            if verify == 1:
+                print('jogada invalida')
+                continue
             jogada = pickle.loads(sock.recv(4096))
             update(jogada, 'O')
         else:
@@ -51,12 +54,13 @@ def init(vez):
             jogada = pickle.loads(sock.recv(4096))
             update(jogada, 'X')
             print('sua vez')
-            mod()
-            tab()
             print('escolha uma posição de 1 à 9')
             jogada = int(input())
             update(jogada, ordem)
             sock.send(pickle.dumps(jogada))
+            if verify == 1:
+                print('jogada invalida')
+                continue
 
 
 def gui():

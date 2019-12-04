@@ -19,6 +19,17 @@ def msg_player(player1, player2):
     return player1, player2
 
 
+def verify(jog):
+    res = 0
+    for c in stream:
+        if stream[c] == jog:
+            res = 1
+        else:
+            res = 0
+            stream.append(jog)
+    return res
+
+
 def game_init():
     ordem = randint(1, 2)
     if ordem == 1:
@@ -28,13 +39,20 @@ def game_init():
         print('jogador2 começa')
         p1, p2 = msg_player(sockg2, sockg1)
     while True:
-        print(' ')
-        jogada = pickle.loads(p1.recv(4096))
-        stream.append(jogada)
+        ver = 1
+        while ver == 1:
+            jogada = pickle.loads(p1.recv(4096))
+            ver = verify(jogada)
+            p1.send(pickle.dumps(ver))
         p2.send(pickle.dumps(jogada))
-        jogada = pickle.loads(p2.recv(4096))
-        stream.append(jogada)
+        ver = 1
+        while ver == 1:
+            jogada = pickle.loads(p2.recv(4096))
+            ver = verify(jogada)
+            p2.send(pickle.dumps(ver))
+        ver = 1
         p1.send(pickle.dumps(jogada))
+
 
 
 while True:
