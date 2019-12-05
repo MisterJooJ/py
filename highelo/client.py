@@ -12,12 +12,23 @@ pos = ['_', '_', '_', '_', '_', '_', ' ', ' ', ' ']
 stream = []
 
 
-def ingame():
-    print('a')
+def ingame(ordem):
+    while True:
+        print('escolha uma posição de 1 à 9')
+        jogada = int(input())
+        sock.send(pickle.dumps(jogada))
+        verify = pickle.loads(sock.recv(4096))
+        if verify == 1:
+            print('jogada invalida')
+            continue
+        update(jogada, ordem)
+        break
 
 
-def wait():
-    print('a')
+def wait(alter):
+    print('esperando o outro jogador')
+    jogada = pickle.loads(sock.recv(4096))
+    update(jogada, alter)
 
 
 def tab():
@@ -42,34 +53,12 @@ def update(jogada, jogador):
 
 def init(vez):
     while True:
-        verify = 0
         if vez == 1:
-            ordem = 'X'
-            print('você começa')
-            print('escolha uma posição de 1 à 9')
-            jogada = int(input())
-            sock.send(pickle.dumps(jogada))
-            verify = pickle.loads(sock.recv(4096))
-            if verify == 1:
-                print('jogada invalida')
-                continue
-            update(jogada, ordem)
-            jogada = pickle.loads(sock.recv(4096))
-            update(jogada, 'O')
+            ingame('X')
+            wait('O')
         else:
-            ordem = 'O'
-            print('esperando o outro jogador')
-            jogada = pickle.loads(sock.recv(4096))
-            update(jogada, 'X')
-            print('sua vez')
-            print('escolha uma posição de 1 à 9')
-            jogada = int(input())
-            sock.send(pickle.dumps(jogada))
-            verify = pickle.loads(sock.recv(4096))
-            if verify == 1:
-                print('jogada invalida')
-                continue
-            update(jogada, ordem)
+            wait('X')
+            ingame('O')
 
 
 def gui():
