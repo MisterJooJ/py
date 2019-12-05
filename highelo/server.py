@@ -3,7 +3,7 @@ import pickle
 from random import randint
 
 gamers = 0
-stream = []
+stream = [0]
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 host = socket.gethostname()
@@ -21,12 +21,13 @@ def msg_player(player1, player2):
 
 def verify(jog):
     res = 0
-    for c in stream:
-        if stream[c] == jog:
-            res = 1
-        else:
-            res = 0
-            stream.append(jog)
+    if jog in stream:
+        res = 1
+    else:
+        res = 0
+        print('a')
+        stream.append(jog)
+        print(stream)
     return res
 
 
@@ -50,9 +51,7 @@ def game_init():
             jogada = pickle.loads(p2.recv(4096))
             ver = verify(jogada)
             p2.send(pickle.dumps(ver))
-        ver = 1
         p1.send(pickle.dumps(jogada))
-
 
 
 while True:

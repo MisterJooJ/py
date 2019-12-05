@@ -12,6 +12,14 @@ pos = ['_', '_', '_', '_', '_', '_', ' ', ' ', ' ']
 stream = []
 
 
+def ingame():
+    print('a')
+
+
+def wait():
+    print('a')
+
+
 def tab():
     print("{}|{}|{}\n"
           "{}|{}|{}\n"
@@ -40,12 +48,12 @@ def init(vez):
             print('você começa')
             print('escolha uma posição de 1 à 9')
             jogada = int(input())
-            update(jogada, ordem)
             sock.send(pickle.dumps(jogada))
             verify = pickle.loads(sock.recv(4096))
             if verify == 1:
                 print('jogada invalida')
                 continue
+            update(jogada, ordem)
             jogada = pickle.loads(sock.recv(4096))
             update(jogada, 'O')
         else:
@@ -56,11 +64,12 @@ def init(vez):
             print('sua vez')
             print('escolha uma posição de 1 à 9')
             jogada = int(input())
-            update(jogada, ordem)
             sock.send(pickle.dumps(jogada))
+            verify = pickle.loads(sock.recv(4096))
             if verify == 1:
                 print('jogada invalida')
                 continue
+            update(jogada, ordem)
 
 
 def gui():
