@@ -13,6 +13,14 @@ sock.bind((host, port))
 sock.listen(100)
 
 
+def exe(p1, p2, ver):
+    while ver == 1:
+        jogada = pickle.loads(p1.recv(4096))
+        ver = verify(jogada)
+        p1.send(pickle.dumps(ver))
+    p2.send(pickle.dumps(jogada))
+
+
 def msg_player(player1, player2):
     player1.send(pickle.dumps(1))
     player2.send(pickle.dumps(2))
@@ -41,17 +49,8 @@ def game_init():
         p1, p2 = msg_player(sockg2, sockg1)
     while True:
         ver = 1
-        while ver == 1:
-            jogada = pickle.loads(p1.recv(4096))
-            ver = verify(jogada)
-            p1.send(pickle.dumps(ver))
-        p2.send(pickle.dumps(jogada))
-        ver = 1
-        while ver == 1:
-            jogada = pickle.loads(p2.recv(4096))
-            ver = verify(jogada)
-            p2.send(pickle.dumps(ver))
-        p1.send(pickle.dumps(jogada))
+        exe(p1, p2, ver)
+        exe(p2, p1, ver)
 
 
 while True:
