@@ -6,6 +6,7 @@ gamers = 0
 stream = [0]
 streamj1 = [0]
 streamj2 = [0]
+vic = 0
 win_condicion = [[0, 1, 2, 3],
                  [0, 4, 5, 6],
                  [0, 7, 8, 9],
@@ -36,6 +37,8 @@ def exe(p1, p2, ver, jstream):
         ver = verify(jogada, jstream)
         p1.send(pickle.dumps(ver))
         if ver == 2:
+            global vic
+            vic = 1
             p2.send(pickle.dumps(0))
     p2.send(pickle.dumps(jogada))
 
@@ -58,6 +61,7 @@ def verify(jog, jstream):
 
 
 def game_init():
+    global vic
     ordem = randint(1, 2)
     if ordem == 1:
         print('jogador1 começa')
@@ -65,9 +69,11 @@ def game_init():
     else:
         print('jogador2 começa')
         p1, p2 = msg_player(sockg2, sockg1)
-    while True:
+    while vic == 0:
         ver = 1
         exe(p1, p2, ver, streamj1)
+        if vic == 1:
+            break
         exe(p2, p1, ver, streamj2)
 
 
@@ -85,3 +91,5 @@ while True:
         gamers += 1
         sockg2.send(pickle.dumps(codigo))
         game_init()
+        if vic == 1:
+            break

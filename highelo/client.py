@@ -31,13 +31,13 @@ def ingame(ordem):
 
 def wait(alter):
     print('esperando o outro jogador')
-    jogada = pickle.loads(sock.recv(4096))
-    if jogada == 0:
-        sock.close()
+    resp = pickle.loads(sock.recv(4096))
+    if resp == 0:
         print('você perdeu')
+        jogada = pickle.loads(sock.recv(4096))
         update(jogada, alter)
         return 0
-    update(jogada, alter)
+    update(resp, alter)
     return 1
 
 
