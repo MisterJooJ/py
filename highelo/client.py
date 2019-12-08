@@ -22,13 +22,23 @@ def ingame(ordem):
             print('jogada invalida')
             continue
         update(jogada, ordem)
-        break
+        if verify == 2:
+            sock.close()
+            print('você ganhou')
+            return verify
+        return verify
 
 
 def wait(alter):
     print('esperando o outro jogador')
     jogada = pickle.loads(sock.recv(4096))
+    if jogada == 0:
+        sock.close()
+        print('você perdeu')
+        update(jogada, alter)
+        return 0
     update(jogada, alter)
+    return 1
 
 
 def tab():
@@ -54,11 +64,19 @@ def update(jogada, jogador):
 def init(vez):
     while True:
         if vez == 1:
-            ingame('X')
-            wait('O')
+            v = ingame('X')
+            if v == 2:
+                break
+            v = wait('O')
+            if v == 0:
+                break
         else:
-            wait('X')
+            v = wait('X')
+            if v == 0:
+                break
             ingame('O')
+            if v == 2:
+                break
 
 
 def gui():

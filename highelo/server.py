@@ -4,6 +4,16 @@ from random import randint
 
 gamers = 0
 stream = [0]
+streamj1 = [0]
+streamj2 = [0]
+win_condicion = [[0, 1, 2, 3],
+                 [0, 4, 5, 6],
+                 [0, 7, 8, 9],
+                 [0, 1, 4, 7],
+                 [0, 2, 5, 8],
+                 [0, 3, 6, 9],
+                 [0, 1, 5, 9],
+                 [0, 3, 5, 7]]
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 host = socket.gethostname()
@@ -13,11 +23,20 @@ sock.bind((host, port))
 sock.listen(100)
 
 
-def exe(p1, p2, ver):
+def final(mov):
+    for c in range(0, 8):
+        if mov in win_condicion:
+            return 2
+    return 0
+
+
+def exe(p1, p2, ver, jstream):
     while ver == 1:
         jogada = pickle.loads(p1.recv(4096))
-        ver = verify(jogada)
+        ver = verify(jogada, jstream)
         p1.send(pickle.dumps(ver))
+        if ver == 2:
+            p2.send(pickle.dumps(0))
     p2.send(pickle.dumps(jogada))
 
 
@@ -27,15 +46,14 @@ def msg_player(player1, player2):
     return player1, player2
 
 
-def verify(jog):
+def verify(jog, jstream):
     res = 0
     if jog in stream:
         res = 1
     else:
-        res = 0
-        print('a')
         stream.append(jog)
-        print(stream)
+        jstream.append(jog)
+        res = final(jstream)
     return res
 
 
@@ -49,8 +67,8 @@ def game_init():
         p1, p2 = msg_player(sockg2, sockg1)
     while True:
         ver = 1
-        exe(p1, p2, ver)
-        exe(p2, p1, ver)
+        exe(p1, p2, ver, streamj1)
+        exe(p2, p1, ver, streamj2)
 
 
 while True:
