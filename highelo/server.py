@@ -7,6 +7,7 @@ stream = [0]
 streamj1 = [0]
 streamj2 = [0]
 vic = 0
+jogadas = 0
 win_condicion = [[0, 1, 2, 3],
                  [0, 4, 5, 6],
                  [0, 7, 8, 9],
@@ -32,14 +33,18 @@ def final(mov):
 
 
 def exe(p1, p2, ver, jstream):
+    global jogadas
+    global vic
     while ver == 1:
         jogada = pickle.loads(p1.recv(4096))
         ver = verify(jogada, jstream)
         p1.send(pickle.dumps(ver))
         if ver == 2:
-            global vic
             vic = 1
             p2.send(pickle.dumps(0))
+        if jogadas == 9:
+            vic = 1
+            p2.send(pickle.dumps(10))
     p2.send(pickle.dumps(jogada))
 
 
@@ -50,6 +55,7 @@ def msg_player(player1, player2):
 
 
 def verify(jog, jstream):
+    global jogadas
     res = 0
     if jog in stream:
         res = 1
@@ -57,6 +63,10 @@ def verify(jog, jstream):
         stream.append(jog)
         jstream.append(jog)
         res = final(jstream)
+        jogadas += 1
+        print(jogadas)
+    if jogadas == 9:
+        return 3
     return res
 
 

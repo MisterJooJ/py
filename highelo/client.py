@@ -26,6 +26,10 @@ def ingame(ordem):
             sock.close()
             print('você ganhou')
             return verify
+        if verify == 3:
+            sock.close()
+            print('deu velha')
+            return verify
         return verify
 
 
@@ -37,6 +41,11 @@ def wait(alter):
         jogada = pickle.loads(sock.recv(4096))
         update(jogada, alter)
         return 0
+    elif resp == 10:
+        print('deu velha')
+        jogada = pickle.loads(sock.recv(4096))
+        update(jogada, alter)
+        return 10
     update(resp, alter)
     return 1
 
@@ -65,17 +74,17 @@ def init(vez):
     while True:
         if vez == 1:
             v = ingame('X')
-            if v == 2:
+            if v == 2 or v == 3:
                 break
             v = wait('O')
-            if v == 0:
+            if v == 0 or v == 10:
                 break
         else:
             v = wait('X')
-            if v == 0:
+            if v == 0 or v == 10:
                 break
             ingame('O')
-            if v == 2:
+            if v == 2 or v == 3:
                 break
 
 
