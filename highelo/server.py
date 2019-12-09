@@ -26,9 +26,14 @@ sock.listen(100)
 
 
 def final(mov):
-    for c in range(0, 8):
-        if mov in win_condicion:
+    flag = 0
+    for element in win_condicion:
+        inter = list(set(element).intersection(mov))
+        lar = len(inter)
+        print(inter)
+        if lar == 4:
             return 2
+
     return 0
 
 
@@ -64,7 +69,6 @@ def verify(jog, jstream):
         jstream.append(jog)
         res = final(jstream)
         jogadas += 1
-        print(jogadas)
     if jogadas == 9:
         return 3
     return res
