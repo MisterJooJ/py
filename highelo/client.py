@@ -15,13 +15,13 @@ stream = []
 def ingame(ordem):
     while True:
         print('escolha uma posição de 1 à 9')
-        jogada = int(input())
+        jogada = input()
         sock.send(pickle.dumps(jogada))
         verify = pickle.loads(sock.recv(4096))
         if verify == 1:
             print('jogada invalida')
             continue
-        update(jogada, ordem)
+        update(int(jogada), ordem)
         if verify == 2:
             sock.close()
             print('você ganhou')
@@ -37,9 +37,9 @@ def wait(alter):
     print('esperando o outro jogador')
     resp = pickle.loads(sock.recv(4096))
     if resp == 0:
-        print('você perdeu')
         jogada = pickle.loads(sock.recv(4096))
         update(jogada, alter)
+        print('você perdeu')
         return 0
     elif resp == 10:
         print('deu velha')
@@ -83,7 +83,7 @@ def init(vez):
             v = wait('X')
             if v == 0 or v == 10:
                 break
-            ingame('O')
+            v = ingame('O')
             if v == 2 or v == 3:
                 break
 

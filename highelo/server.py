@@ -50,7 +50,7 @@ def exe(p1, p2, ver, jstream):
         if jogadas == 9:
             vic = 1
             p2.send(pickle.dumps(10))
-    p2.send(pickle.dumps(jogada))
+    p2.send(pickle.dumps(int(jogada)))
 
 
 def msg_player(player1, player2):
@@ -62,11 +62,15 @@ def msg_player(player1, player2):
 def verify(jog, jstream):
     global jogadas
     res = 0
-    if jog in stream:
+    if str(jog).isalpha():
+        res = 1
+    elif int(jog) < 1 or int(jog) > 9:
+        res = 1
+    elif int(jog) in stream:
         res = 1
     else:
-        stream.append(jog)
-        jstream.append(jog)
+        stream.append(int(jog))
+        jstream.append(int(jog))
         res = final(jstream)
         jogadas += 1
     if jogadas == 9:
